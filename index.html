@@ -257,6 +257,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     OVER_TIME: 2,              // 線を越え続けたら終わる秒数
     DROP_GRACE: 1.5,           // 落としたばかりの物は終了判定から外す秒数
     COOLDOWN: 0.5,             // 落としてから次が出るまで
+    MERGE_GAP: 2,              // 同じ器はこの距離（単位）まで近ければ触れたとみなして合体（形どうしに1〜2の隙間が残って合体しないことがあった）
     // 絵（art/sprites の 128×128）：絵の中心から一番遠い不透明画素までの距離（画素）
     SPRITE_M: {'0': 71.11, '1': 75.0, '2': 76.55, '3': 71.11, '4': 65.12, '5': 71.7, '6': 64.63, '7': 64.63, '8': 72.47, '9': 69.34, '10': 75.29, '-1': 65.12, '-2': 82.76},
     // 当たり判定の形（絵の画素・絵の中心が原点）。v＝凸多角形、c＝円 [x,y,半径]。art/sprites の輪郭の凸包から作った
@@ -433,7 +434,39 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       if (n) { cx /= n; cy /= n; } else { cx = (a.x + b.x) / 2; cy = (a.y + b.y) / 2; }
       out.push({ a: a, b: b, x: cx, y: cy });
     }
+    // 同じ段の器で、形どうしが MERGE_GAP 以内まで近い組も触れたとみなす（matter の接触の後ろに並べる）
+    var bs = state.bodies, g = CONFIG.MERGE_GAP;
+    for (i = 0; i < bs.length; i++) for (j = i + 1; j < bs.length; j++) {
+      var p = bs[i], q = bs[j];
+      if (p.tier !== q.tier || !isVessel(p.tier) || !boundsNear(p.body.bounds, q.body.bounds, g)) continue;
+      var d = gapOf(p.body, q.body);
+      if (d && d.dist <= g && !hasPair(out, p, q)) out.push({ a: p.id < q.id ? p : q, b: p.id < q.id ? q : p, x: d.x, y: d.y });
+    }
     return out;
+  }
+
+  function boundsNear(a, b, g) {
+    return a.min.x - g <= b.max.x && b.min.x - g <= a.max.x && a.min.y - g <= b.max.y && b.min.y - g <= a.max.y;
+  }
+  function hasPair(out, p, q) {
+    for (var i = 0; i < out.length; i++) if ((out[i].a === p && out[i].b === q) || (out[i].a === q && out[i].b === p)) return true;
+    return false;
+  }
+  // 2つの形（凸形の組み合わせ）の最短距離と、その中点。頂点から相手の辺までの距離の最小で測る
+  function gapOf(A, B) {
+    var pa = A.parts.length > 1 ? A.parts.slice(1) : A.parts, pb = B.parts.length > 1 ? B.parts.slice(1) : B.parts, best = null;
+    function scan(vs, ws) {
+      for (var i = 0; i < vs.length; i++) for (var k = 0; k < ws.length; k++) {
+        var v = vs[i], e0 = ws[k], e1 = ws[(k + 1) % ws.length], ex = e1.x - e0.x, ey = e1.y - e0.y, L = ex * ex + ey * ey;
+        var t = L ? Math.max(0, Math.min(1, ((v.x - e0.x) * ex + (v.y - e0.y) * ey) / L)) : 0;
+        var nx = e0.x + ex * t, ny = e0.y + ey * t, d = Math.sqrt((v.x - nx) * (v.x - nx) + (v.y - ny) * (v.y - ny));
+        if (!best || d < best.dist) best = { dist: d, x: (v.x + nx) / 2, y: (v.y + ny) / 2 };
+      }
+    }
+    for (var i = 0; i < pa.length; i++) for (var k = 0; k < pb.length; k++) {
+      scan(pa[i].vertices, pb[k].vertices); scan(pb[k].vertices, pa[i].vertices);
+    }
+    return best;
   }
 
   function doMerges(state) {

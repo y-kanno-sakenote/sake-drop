@@ -26,12 +26,19 @@ document.title = TITLE;
   #hud .lbl{color:#e6d6bc}
   .lbl{font-size:12px;color:var(--sub)}
   .val{font-size:22px;line-height:1.1}
+  #hudL .val .lbl{font-size:12px}
+  #bestRow{margin-top:2px;font-variant-numeric:tabular-nums}
   #nextWrap{display:flex;align-items:center;gap:6px}
   #nextCv{width:56px;height:56px}
-  #hudR{display:flex;align-items:center;gap:8px}
+  #hudR{display:flex;align-items:center;gap:12px}
   #snd{font:inherit;font-size:22px;line-height:1;width:40px;height:40px;border:0;border-radius:8px;background:rgba(0,0,0,.25);color:var(--ink);cursor:pointer;touch-action:manipulation}
-  #stage{flex:1 1 auto;width:100%;display:flex;align-items:flex-start;justify-content:center;min-height:0}
-  #cv{display:block;touch-action:none;border-radius:6px;outline:2px solid rgba(255,240,215,.7);outline-offset:0}
+  #stage{flex:1 1 auto;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:0}
+  #cv{display:block;touch-action:none}
+  /* 箱の下の器の順番（小→大）。絵の大きさも段ごとに少しずつ大きく */
+  #ladder{flex:0 0 auto;height:34px;margin-top:8px;display:flex;align-items:flex-end}
+  #ladder span{flex:1;min-width:0;display:flex;justify-content:center;align-items:flex-end}
+  #ladder img{display:block;max-width:100%;object-fit:contain;image-rendering:pixelated}
+  body.top #ladder{visibility:hidden}
   #over{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(20,16,12,.72)}
   #over.on{display:flex}
   .card{background:var(--panel);padding:24px 28px;border-radius:12px;text-align:center;min-width:220px}
@@ -142,18 +149,30 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   @font-face{font-family:"SakeDropTitle";src:url(data:font/woff2;base64,d09GMgABAAAAAAQsABAAAAAACKgAAAPTAAEZmgAAAAAAAAAAAAAAAAAAAAAAAAAAGYFWGyAcIAZgAFQRCAqFeIUiATYCJAMOCw4ABCAFg2AHIBckGA4bLQconoNxmxxOZVJzmhNvb7GlLYUSD19z/56b3UdJCoCaFIMmQP+nQtZItkiuCuUbX3A/R+O8HxxpJZAprZW1sFlla/sSoUFMZrJ8EW3fk80dRB6q74HvfYiIha+KxEQZhBCLVurzxOX0R2Ny4Z5AAQaa0FhDnxqTorUAuzdoWWmbXhvnb8VdYoGElpHbJo7KY7PEUSK4E+g6ZgCnvXZ9SztTHl42J5j7uDk4ztwneqdGmfJ071QvU57pnZtibgRQyKaSUtIigCSrDUfHhpqoSFugZkM0L7KxcCcPD/WR8bmfJvyNOT055ZVqDvCSwgZ7IJQmE0KePo0kQ/MPQNtzehMHWhT3ih3AlslTsY811oKi6GlZ3cKPWr+9uY2F5xmHrY5dM0AeiOlAQDE5jQKmI6BAwmhYgdFwVgK1rkKet7m2q3akc+Sw9b9h6bWvT4dfu5lKs9DqhGj+lWhtD64xBsR0EIsAyIAkhI7egrqcPLXUmbvtnOvhuR6a28Pz9hJV0jatVSkNoYDCykI14q2X81Fer4BRy5A5gZpKBrcrXGVIVEylt0Z9uzfSqSqGyBC17UplmKGIRB1Dok4WDCgsqM2T7Y5A3Oc5PqYMC/cOzLbhPYbnyvMRWtb+MguYd2vM3mGe3LmygODp8QPQ+NnLkdLhSHVG6UgKmMTtoNl7QFvTAAhYsfdN7w/08Kg/SpewIOzLlmNH1r75/y732zKnfFZoT80VqTUoQNeH9eq5RMTL5TXLJSO+HEUBiHKh0GZIF4UUoDS3lmPP2Y9dKUGzEm5y4QEWELdEpdGoKYAJD3/A4nOU5Kb9/Z+/v+2HhQkyucJ7xu6XDQ6cBsflu/JN3spXSQlPE+EVetztcTiW08v6mudpD4bs8xHQyIAQ0Om+/kG+U4re5UOG4AM1pCWXj6sQmr5zLUDki3EL4oHHP4d7VUzG7MuXzwxxAFPBEpa+DgWPgGHUuyF9kgEEYsL93fP0UXex/y+pSn34PkAefP9Hv5lmI/XTDNBWgCAPDP4m9Wm+iHoAntjI3yHyGr6FCELbA6PxYb7MDujYBStyD8/AgjCM9RUWhvomTJb6CbO5MV3YMjHWX9Y2Nw6I2dq5O5ibmjkRszIPMmL1ZXDcGLd1kqo8M5wzZOFcruxga2Fs6Hwu4oxdtnVwJKY2c3Kyc+RlYjI1J7VnA0ZDpr1mMrG18V2ZZ6lDhg00R6Yo0Jhotr+RqrGps5W+AwsjCzMzn6SWnBrf+SkG3Q9qTJxrGuftm0c+JvY7DF8xrNZsc2OB1hgO/RmsU/9dmSZAnrbKCgkBAAAA) format("woff2");font-display:block}
   /* 字の大きさは元の16pxの格子の4倍（64px）。字間・影も1ドット＝4pxに揃える */
   #tTitle{position:absolute;top:128px;left:0;right:0;height:72px;line-height:72px;text-align:center;font-family:"SakeDropTitle","Hiragino Mincho ProN","Yu Mincho",serif;font-size:64px;font-weight:normal;letter-spacing:4px;padding-left:4px;color:#f3ece0;text-shadow:4px 4px 0 #2a2621;white-space:nowrap}
-  #tHow{position:absolute;top:224px;left:50%;width:340px;margin-left:-170px;list-style:none;font-size:16px;color:#f3ece0;text-shadow:0 1px 2px rgba(0,0,0,.75)}
-  #tHow li{display:flex;align-items:center;gap:10px;height:32px;white-space:nowrap}
-  #tHow li.two{height:auto;min-height:32px;padding-top:4px}
-  #tHow li.two small{display:block;font-size:13px;line-height:18px;color:#d9ccb6}
-  #tHow img{width:24px;height:24px;flex:0 0 24px;object-fit:contain;image-rendering:pixelated}
-  #tGo{position:absolute;top:356px;left:50%;width:200px;height:56px;margin-left:-100px;border:0;border-radius:28px;background:#c0392b;color:#f3ece0;font:inherit;font-size:22px;cursor:pointer;touch-action:manipulation;box-shadow:0 2px 0 #2a2621}
-  #tBest{position:absolute;top:452px;left:50%;width:160px;margin-left:-80px;text-shadow:0 1px 2px rgba(0,0,0,.75)}
+  #tGo{position:absolute;top:256px;left:50%;width:200px;height:56px;margin-left:-100px;border:0;border-radius:28px;background:#c0392b;color:#f3ece0;font:inherit;font-size:22px;cursor:pointer;touch-action:manipulation;box-shadow:0 2px 0 #2a2621}
+  #tHowBtn{position:absolute;top:326px;left:50%;width:200px;height:44px;margin-left:-100px;border:1px solid rgba(243,236,224,.6);border-radius:22px;background:rgba(28,20,12,.45);color:#f3ece0;font:inherit;font-size:18px;cursor:pointer;touch-action:manipulation}
+  #tBest{position:absolute;top:400px;left:50%;width:160px;margin-left:-80px;text-shadow:0 1px 2px rgba(0,0,0,.75)}
   #tBest h3{font-size:12px;font-weight:normal;color:#e6d6bc;text-align:center;margin-bottom:4px}
   #tBest ol{list-style:none}
-  #tBest li{display:flex;justify-content:space-between;height:22px;line-height:22px;font-size:16px;padding:0 6px;border-radius:4px;font-variant-numeric:tabular-nums}
+  #tBest li{display:flex;justify-content:center;gap:20px;height:22px;line-height:22px;font-size:16px;padding:0 6px;border-radius:4px;font-variant-numeric:tabular-nums}
   #tBest li.fresh{animation:fresh 1.6s ease-out 1}
   @keyframes fresh{0%,30%{background:rgba(240,194,122,.45)}100%{background:rgba(240,194,122,0)}}
+  /* 遊び方ページ（トップから開く） */
+  #how{position:fixed;inset:0;z-index:11;display:none;overflow-y:auto;background:rgba(20,16,12,.82)}
+  body.how #how{display:block}
+  body.how #topIn{visibility:hidden}
+  #howIn{width:100%;max-width:360px;margin:0 auto;padding:56px 16px 32px;color:#f3ece0;text-shadow:0 1px 2px rgba(0,0,0,.75)}
+  #howIn h2{font-size:24px;font-weight:normal;text-align:center;margin-bottom:16px}
+  #howIn h3{font-size:14px;font-weight:normal;color:#e6d6bc;margin:22px 0 8px}
+  #hSteps{list-style-position:inside;padding-left:0;font-size:16px;line-height:1.7}
+  #hLadder{list-style:none;display:grid;grid-template-columns:repeat(6,1fr);gap:8px 2px}
+  #hLadder li{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;font-size:11px;color:#e6d6bc;white-space:nowrap}
+  #hLadder img{width:40px;height:40px;object-fit:contain;image-rendering:pixelated}
+  #hSpecial{list-style:none;font-size:15px;line-height:1.6}
+  #hSpecial li{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+  #hSpecial img{width:36px;height:36px;flex:0 0 36px;image-rendering:pixelated}
+  #hSpecial b{font-weight:normal;color:#f0c27a}
+  #hBack{display:block;margin:24px auto 0;width:160px;height:44px;border:0;border-radius:22px;background:#c0392b;color:#f3ece0;font:inherit;font-size:18px;cursor:pointer;touch-action:manipulation}
   /* トップの間はゲームの画面を隠し、🔈 だけ同じ場所に残す */
   body.top #hud{background:transparent}
   body.top #hud > div:not(#hudR), body.top #hudR > div, body.top #stage{visibility:hidden}
@@ -164,22 +183,33 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 <body class="top">
 <div id="app">
   <div id="hud">
-    <div><div class="lbl">点</div><div class="val" id="score">0</div></div>
-    <div id="nextWrap"><div class="lbl">つぎ</div><canvas id="nextCv" width="112" height="112"></canvas></div>
-    <div id="hudR"><div style="text-align:right"><div class="lbl">最高</div><div class="val" id="best">0</div></div>
+    <div id="hudL"><div class="val"><span class="lbl">点</span> <span id="score">0</span></div><div class="lbl" id="bestRow">最高 <span id="best">0</span></div></div>
+    <div id="hudR"><div id="nextWrap"><div class="lbl">つぎ</div><canvas id="nextCv" width="112" height="112"></canvas></div>
       <button id="snd" type="button" aria-label="音を消す">🔈</button></div>
   </div>
-  <div id="stage"><canvas id="cv"></canvas></div>
+  <div id="stage"><canvas id="cv"></canvas><div id="ladder" aria-hidden="true"></div></div>
 </div>
 <div id="top"><div id="topIn">
   <h1 id="tTitle"></h1>
-  <ul id="tHow">
-    <li><img id="tI0" alt="">同じ器はくっついて育つ</li>
-    <li><img id="tI1" alt="">杉玉は器を育てる</li>
-    <li class="two"><img id="tI2" alt=""><span>酔っ払いは一升瓶以上の酒を飲んで消える<small>飲まれた酒は一段階ランクが下がる</small></span></li>
-  </ul>
   <button id="tGo" type="button">はじめる</button>
+  <button id="tHowBtn" type="button">遊び方</button>
   <div id="tBest"><h3>ベスト</h3><ol id="tList"></ol></div>
+</div></div>
+<div id="how"><div id="howIn">
+  <h2>遊び方</h2>
+  <ol id="hSteps">
+    <li>指でねらって、はなすと器が落ちる</li>
+    <li>同じ器がくっつくと、一段大きい器になる</li>
+    <li>器が線をこえてあふれたら終わり</li>
+  </ol>
+  <h3>器の順番</h3>
+  <ol id="hLadder"></ol>
+  <h3>ときどき落ちてくる</h3>
+  <ul id="hSpecial">
+    <li><img id="hSugi" alt=""><span><b>杉玉</b>　触れた器を一段育てて消える</span></li>
+    <li><img id="hNomi" alt=""><span><b>酔っ払い</b>　一升瓶以上の器を一段小さくして消える</span></li>
+  </ul>
+  <button id="hBack" type="button">もどる</button>
 </div></div>
 <div id="over"><div class="card">
   <h2>あふれました</h2>
@@ -221,7 +251,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   var Engine = M.Engine, Bodies = M.Bodies, Body = M.Body, Composite = M.Composite,
       Vertices = M.Vertices, Sleeping = M.Sleeping;
   var CONFIG = {
-    W: 300, H: 480,            // 箱の内寸（世界座標・y は下向き）
+    W: 300, H: 424,
     LINE_Y: 84,                // 上の線（これより上にはみ出すと危険）
     DROP_Y: 56,                // 落とし始めの高さ（絵の中心）
     GRAVITY: 1500,             // 単位/秒^2
@@ -241,12 +271,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     SHORT: ['猪口', 'ぐい', '升', '片口', '徳利', 'ちろり', '四合', '一升', '角樽', '斗瓶', '菰樽'],
     // 器の直径（＝絵の中心から一番遠い画素までの長さ×2）が箱幅の何%か（小さい器から大きい器へ、段ごとにゆるやかに大きくなる比率）
     DIAM_PCT: [5.9, 8.6, 10.9, 12.3, 15.9, 20.4, 23.0, 27.9, 31.6, 39.3, 46.3],
-    SIZE_SCALE: 1.4,
+    SIZE_SCALE: 1.45,
     BASE: [1, 3, 6, 10, 15, 21, 28, 36, 45, 55],  // 段 i 同士が合体したときの点（三角数）
     BARREL_BONUS: 66,                       // 菰樽同士（2つとも消える）の点
     SPAWN_TIERS: 5,            // 落ちてくる器はお猪口〜徳利（等確率）
     // 杉玉（ブースト）
-    SUGI_P: 1 / 15,            // 器の代わりに杉玉が出る確率
+    SUGI_P: 1 / 15,
     SUGI_SIZE: 4,              // 杉玉の大きさ＝この段の器と同じ（徳利）
     SUGI_BARREL_POINTS: 10,    // 杉玉が菰樽に触れて消えたときの点（小）
     // 飲兵衛（デバフ）
@@ -889,7 +919,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     try { localStorage.setItem(KEY5, JSON.stringify(top5)); } catch (e) {}
     return r;
   }
-  elBest.textContent = fmt(best);
+  function showBest() { elBest.textContent = fmt(best); document.getElementById('bestRow').style.visibility = best > 0 ? '' : 'hidden'; }
+  showBest();
 
   // トップ画面
   document.getElementById('tTitle').textContent = TITLE;
@@ -899,7 +930,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     ol.innerHTML = '';
     top5.forEach(function (v, i) {
       var li = document.createElement('li');
-      li.innerHTML = '<span>' + (i + 1) + '</span><span>' + fmt(v) + '</span>';
+      li.innerHTML = (top5.length > 1 ? '<span>' + (i + 1) + '</span>' : '') + '<span>' + fmt(v) + '</span>';
       if (i === freshRank) li.className = 'fresh';
       ol.appendChild(li);
     });
@@ -920,11 +951,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
   function fit() {
     var stage = document.getElementById('stage');
-    var aw = stage.clientWidth, ah = stage.clientHeight;
+    var aw = stage.clientWidth, ah = stage.clientHeight - 42;   // 42＝箱の下の帯（高さ34＋間8）
     scale = Math.min(aw / C.W, ah / C.H);
     dpr = window.devicePixelRatio || 1;
     cv.style.width = Math.floor(C.W * scale) + 'px';
     cv.style.height = Math.floor(C.H * scale) + 'px';
+    document.getElementById('ladder').style.width = Math.floor(C.W * scale) + 'px';
     cv.width = Math.floor(C.W * scale * dpr);
     cv.height = Math.floor(C.H * scale * dpr);
   }
@@ -951,9 +983,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     im.onload = function () { lastNext = -1; };  // 読み込み後に予告欄を描き直す
     im.src = SPRITES[k].src; SPRITES[k].img = im;
   });
-  document.getElementById('tI0').src = SPRITES['0'].src;
-  document.getElementById('tI1').src = SPRITES['-1'].src;
-  document.getElementById('tI2').src = SPRITES['-2'].src;
+  // 器の順番：箱の下の帯と遊び方ページ
+  (function () {
+    var lad = document.getElementById('ladder'), hl = document.getElementById('hLadder'), n = C.NAMES.length;
+    for (var t = 0; t < n; t++) {
+      var im = new Image(); im.src = SPRITES[String(t)].src; im.alt = '';
+      var px = Math.round(16 + 14 * t / (n - 1)); im.style.width = im.style.height = px + 'px';
+      var cell = document.createElement('span'); cell.appendChild(im); lad.appendChild(cell);
+      var li = document.createElement('li'), im2 = new Image(); im2.src = im.src; im2.alt = '';
+      li.appendChild(im2); li.appendChild(document.createTextNode(C.NAMES[t])); hl.appendChild(li);
+    }
+    document.getElementById('hSugi').src = SPRITES['-1'].src;
+    document.getElementById('hNomi').src = SPRITES['-2'].src;
+  })();
 
   function drawPiece(g, piece, x, y, r, alpha) {
     var sp = SPRITES[String(piece)];
@@ -982,7 +1024,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     var g = ctx;
     g.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
     g.clearRect(0, 0, C.W, C.H);
-    g.fillStyle = 'rgba(0,0,0,0.25)'; g.fillRect(0, 0, C.W, C.H);  // 箱の中だけ暗い板を重ねて器を浮かせる
+    // 線から下が箱（暖色の暗い板で背景を沈め、器を浮かせる。線より上は塗らず差をつける）。箱の縁は左右と底
+    g.fillStyle = 'rgba(28,18,10,0.6)'; g.fillRect(0, C.LINE_Y, C.W, C.H - C.LINE_Y);
+    g.strokeStyle = 'rgba(255,240,215,0.75)'; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(1, C.LINE_Y); g.lineTo(1, C.H - 1); g.lineTo(C.W - 1, C.H - 1); g.lineTo(C.W - 1, C.LINE_Y); g.stroke();
     // 上の線
     var danger = state.overTimer > 0;
     g.save();
@@ -1035,6 +1080,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   document.getElementById('tGo').addEventListener('click', function () {
     document.body.classList.remove('top'); mode = 'play'; start(); fit();
   });
+  document.getElementById('tHowBtn').addEventListener('click', function () { document.body.classList.add('how'); document.getElementById('how').scrollTop = 0; });
+  document.getElementById('hBack').addEventListener('click', function () { document.body.classList.remove('how'); });
   window.addEventListener('resize', fit);
 
   var last = 0, lastNext = -1;
@@ -1050,7 +1097,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     if (state.over && !ended) {
       ended = true;
       var r = record(state.score); freshRank = r;
-      elBest.textContent = fmt(best);
+      showBest();
       document.getElementById('oScore').textContent = fmt(state.score);
       document.getElementById('oRank').textContent = r === 0 ? 'いちばん！' : r > 0 ? 'ベスト5の' + (r + 1) + '位' : '';
       document.getElementById('oRank').style.display = r >= 0 ? '' : 'none';
